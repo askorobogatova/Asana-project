@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кейс: Автоматизація крос-функціонального менеджменту</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 250px;
+            }
+        }
+        .step-card {
+            transition: all 0.3s ease;
+        }
+        .step-card.active {
+            border-color: #6366f1;
+            background-color: #eef2ff;
+            box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.1), 0 2px 4px -1px rgba(99, 102, 241, 0.06);
+        }
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen pb-20">
+
+    <!-- Chosen Palette: Warm neutral background (slate-50), crisp white cards (white), primary action accents (indigo-600, indigo-50), success/positive indicators (emerald-500), problem indicators (rose-500). -->
+    <!-- Application Structure Plan: The SPA is structured as a chronological, interactive case study. It begins with a Hero section for immediate context (TL;DR). Followed by an interactive "Before/After" toggle section to highlight the stark contrast the automation brought. Then, a "Workflow" section uses clickable HTML cards to break down the technical solution step-by-step, avoiding overwhelming the user. Finally, a "Results Dashboard" uses Chart.js to quantify the impact, providing hard data for the claims. This narrative flow (Context -> Problem -> Solution -> Impact) is the most effective structure for a portfolio presentation. -->
+    <!-- Visualization & Content Choices: 
+         1. TL;DR & Meta -> Goal: Quick context -> Presentation: Clean Grid/Cards -> Interaction: None (static info). 
+         2. Problem vs Solution -> Goal: Emphasize transformation -> Presentation: Interactive Tab Toggle -> Interaction: Click to switch states -> Justification: Keeps UI clean while showing direct contrast. 
+         3. Workflow Details -> Goal: Explain technical process -> Presentation: Interactive HTML/CSS flow diagram -> Interaction: Click node to reveal details -> Justification: NO SVG/Mermaid used; native HTML allows for a custom, responsive, accessible diagram. 
+         4. Business Impact -> Goal: Prove value -> Presentation: Chart.js Bar Chart & Stat Cards -> Interaction: Hover tooltips -> Justification: Visualizes the "15-20 hours saved" metric effectively. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <header class="bg-white border-b border-slate-200 pt-16 pb-12 px-4 sm:px-6 lg:px-8 shadow-sm">
+        <div class="max-w-5xl mx-auto">
+            <div class="inline-flex items-center px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-sm font-semibold mb-6">
+                🚀 Case Study
+            </div>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 leading-tight mb-6">
+                Автоматизація крос-функціонального менеджменту та міграція в Asana
+            </h1>
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 sm:p-8 mb-8 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-2 h-full bg-indigo-500"></div>
+                <h2 class="text-lg font-semibold text-slate-800 mb-2 flex items-center gap-2">
+                    <span>💡</span> TL;DR (Коротко про головне)
+                </h2>
+                <p class="text-slate-600 leading-relaxed text-lg">
+                    Ліквідовано рутину у відділі контенту шляхом переведення команди з хаотичних чатів MS Teams та ручних Google Таблиць у повністю автоматизоване середовище Asana. Впроваджена двостороння синхронізація <strong>зекономила команді десятки годин щомісяця</strong> та звела до нуля помилки через людський фактор.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                    <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">Роль</p>
+                    <p class="font-medium text-slate-800">Operations Manager</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                    <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">Компанія</p>
+                    <p class="font-medium text-slate-800">BeaverCraft</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                    <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">Тривалість</p>
+                    <p class="font-medium text-slate-800">3 тижні</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                    <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">Головний ефект</p>
+                    <p class="font-medium text-emerald-600">Економія 15-20 год/тиж</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 space-y-20">
+
+        <section>
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-slate-900 mb-4">Трансформація процесу</h2>
+                <p class="text-slate-600">Цей розділ демонструє фундаментальну різницю між хаотичним управлінням, яке існувало до мого втручання, та єдиною автоматизованою екосистемою, яку я впровадила. Перемикайте вкладки, щоб побачити контраст.</p>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="flex border-b border-slate-200">
+                    <button id="btn-before" class="flex-1 py-4 px-6 text-center font-semibold text-rose-600 border-b-2 border-rose-500 bg-rose-50/30 transition-colors">
+                        🛑 До: Хаос та Рутина
+                    </button>
+                    <button id="btn-after" class="flex-1 py-4 px-6 text-center font-medium text-slate-500 border-b-2 border-transparent hover:bg-slate-50 transition-colors">
+                        💡 Після: Єдина Екосистема
+                    </button>
+                </div>
+                
+                <div class="p-8 min-h-[300px]" id="comparison-content">
+                    <div id="content-before" class="fade-in">
+                        <h3 class="text-xl font-bold text-slate-800 mb-6">Процес до впровадження (5 спеціалістів)</h3>
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="font-semibold text-slate-700 mb-3 border-b pb-2">Як це виглядало:</h4>
+                                <ul class="space-y-3">
+                                    <li class="flex gap-3"><span class="text-rose-500">❌</span> <span class="text-slate-600">Задачі ставилися хаотично в чатах MS Teams.</span></li>
+                                    <li class="flex gap-3"><span class="text-rose-500">❌</span> <span class="text-slate-600">Деталі фіксувалися у розрізнених Google Таблицях.</span></li>
+                                    <li class="flex gap-3"><span class="text-rose-500">❌</span> <span class="text-slate-600">Виконавці постійно "стрибали" між таблицями.</span></li>
+                                    <li class="flex gap-3"><span class="text-rose-500">❌</span> <span class="text-slate-600">Ручне оновлення статусів та посилань замовникам.</span></li>
+                                </ul>
+                            </div>
+                            <div class="bg-rose-50 rounded-xl p-5 border border-rose-100">
+                                <h4 class="font-semibold text-rose-800 mb-3">Наслідки для бізнесу:</h4>
+                                <ul class="space-y-3">
+                                    <li class="flex gap-2 text-rose-700 text-sm"><span>▪️</span> <strong>Вигорання:</strong> Команда витрачала години на адміністрування, а не створення контенту.</li>
+                                    <li class="flex gap-2 text-rose-700 text-sm"><span>▪️</span> <strong>Людський фактор:</strong> Забуті статуси, загублені посилання, помилки при копіюванні.</li>
+                                    <li class="flex gap-2 text-rose-700 text-sm"><span>▪️</span> <strong>Сліпа зона:</strong> Неможливість об'єктивно порахувати KPI та навантаження.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="content-after" class="hidden fade-in">
+                        <h3 class="text-xl font-bold text-slate-800 mb-6">Рішення: Двостороння синхронізація</h3>
+                        <p class="text-slate-600 mb-6">Я зробила <strong>Asana</strong> єдиним інструментом для відділу контенту. Щоб замовникам не довелося змінювати звички, я побудувала автоматизований "міст" між Google Sheets та Asana.</p>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div class="bg-indigo-50/50 p-5 rounded-xl border border-indigo-100">
+                                <div class="text-2xl mb-2">🤖</div>
+                                <h4 class="font-semibold text-indigo-900 mb-2">Автоматизація входу</h4>
+                                <p class="text-sm text-indigo-700">Замовник пише в таблицю — тригер миттєво створює оформлену картку в Asana за допомогою ШІ.</p>
+                            </div>
+                            <div class="bg-indigo-50/50 p-5 rounded-xl border border-indigo-100">
+                                <div class="text-2xl mb-2">🎯</div>
+                                <h4 class="font-semibold text-indigo-900 mb-2">Фокус команди</h4>
+                                <p class="text-sm text-indigo-700">Виконавець працює тільки в Asana. Всі файли на Google Drive за новою стандартизованою ієрархією.</p>
+                            </div>
+                            <div class="bg-indigo-50/50 p-5 rounded-xl border border-indigo-100">
+                                <div class="text-2xl mb-2">🔄</div>
+                                <h4 class="font-semibold text-indigo-900 mb-2">Зворотна магія</h4>
+                                <p class="text-sm text-indigo-700">Виконавець закриває задачу в Asana — скрипт сам оновлює статус у таблиці замовника.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-slate-900 mb-4">Технічний Workflow (Як це працює)</h2>
+                <p class="text-slate-600">У цьому розділі детально розкрито архітектуру автоматизації. Натискайте на кроки діаграми нижче, щоб дізнатися, які саме інструменти та процеси задіяні на кожному етапі життєвого циклу задачі.</p>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="md:w-1/3 flex flex-col gap-4">
+                    <button class="step-card active text-left p-5 rounded-xl border border-slate-200 bg-white cursor-pointer relative" onclick="showStep(1, this)">
+                        <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-bold border-4 border-white">1</div>
+                        <h4 class="font-bold text-slate-800 mb-1">Вхідний запит</h4>
+                        <p class="text-xs text-slate-500 uppercase tracking-wide">Google Sheets ➡️ Asana</p>
+                    </button>
+                    <div class="hidden md:flex justify-center text-slate-300">⬇️</div>
+                    <button class="step-card text-left p-5 rounded-xl border border-slate-200 bg-white cursor-pointer relative" onclick="showStep(2, this)">
+                        <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold border-4 border-white step-num">2</div>
+                        <h4 class="font-bold text-slate-800 mb-1">Робота команди</h4>
+                        <p class="text-xs text-slate-500 uppercase tracking-wide">Asana + Google Drive</p>
+                    </button>
+                    <div class="hidden md:flex justify-center text-slate-300">⬇️</div>
+                    <button class="step-card text-left p-5 rounded-xl border border-slate-200 bg-white cursor-pointer relative" onclick="showStep(3, this)">
+                        <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold border-4 border-white step-num">3</div>
+                        <h4 class="font-bold text-slate-800 mb-1">Зворотна синхронізація</h4>
+                        <p class="text-xs text-slate-500 uppercase tracking-wide">Asana ➡️ Google Sheets</p>
+                    </button>
+                </div>
+
+                <div class="md:w-2/3 bg-white rounded-2xl border border-slate-200 p-6 md:p-8 shadow-sm flex items-center">
+                    <div id="step-details" class="fade-in w-full">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-3xl">📋</span>
+                            <h3 class="text-xl font-bold text-slate-800">Крок 1: Автоматичне створення задачі</h3>
+                        </div>
+                        <ul class="space-y-4 text-slate-600 mt-6">
+                            <li class="flex items-start gap-3">
+                                <span class="text-indigo-500 mt-1">▪️</span>
+                                <div>Замовник просто додає новий рядок у свою звичну Google Таблицю, не змінюючи своїх робочих звичок.</div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-indigo-500 mt-1">▪️</span>
+                                <div>Тригер (Power Automate / Apps Script) миттєво зчитує цей рядок і ініціює створення картки.</div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-indigo-500 mt-1">▪️</span>
+                                <div>Модель штучного інтелекту (Gemini/ChatGPT) обробляє сирий текст і допомагає структурувати вхідні дані для ідеального технічного завдання в Asana.</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8">
+                <h4 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Технічний Стек</h4>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 shadow-sm">Asana API</span>
+                    <span class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 shadow-sm">Google Sheets</span>
+                    <span class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 shadow-sm">Power Automate</span>
+                    <span class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 shadow-sm">Google Apps Script</span>
+                    <span class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 shadow-sm">Google Drive</span>
+                    <span class="px-4 py-2 bg-indigo-50 border border-indigo-100 rounded-lg text-sm font-medium text-indigo-700 shadow-sm">AI (Gemini / ChatGPT)</span>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-slate-900 mb-4">Результати та Бізнес-вплив</h2>
+                <p class="text-slate-600">Візуалізація реальної користі від впровадженої екосистеми. Аналітика демонструє суттєве скорочення адміністративної рутини та підвищення надійності процесів відділу контенту.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-1 space-y-4">
+                    <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-5">
+                        <div class="text-emerald-600 text-3xl font-black mb-1">15-20 год</div>
+                        <div class="text-emerald-800 font-semibold text-sm uppercase tracking-wide mb-2">Зекономлено щотижня</div>
+                        <p class="text-emerald-700/80 text-sm">Час команди, який раніше витрачався на ручне адміністрування таблиць.</p>
+                    </div>
+                    
+                    <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-5">
+                        <div class="text-indigo-600 text-3xl font-black mb-1">0%</div>
+                        <div class="text-indigo-800 font-semibold text-sm uppercase tracking-wide mb-2">Ручних помилок</div>
+                        <p class="text-indigo-700/80 text-sm">Повністю усунуто проблему "забутих" статусів чи втрачених посилань завдяки синхронізації.</p>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 shadow-sm rounded-xl p-5">
+                        <div class="text-slate-800 font-semibold text-sm uppercase tracking-wide mb-2 flex items-center gap-2"><span>📈</span> Прозора аналітика</div>
+                        <p class="text-slate-600 text-sm">Кожна задача отримала таймстемп. Розроблено систему збору метрик для підрахунку реального часу виконання (KPI).</p>
+                    </div>
+                    
+                    <div class="bg-white border border-slate-200 shadow-sm rounded-xl p-5">
+                        <div class="text-slate-800 font-semibold text-sm uppercase tracking-wide mb-2 flex items-center gap-2"><span>🗂️</span> Порядок в активах</div>
+                        <p class="text-slate-600 text-sm">Єдина мапа зберігання на Google Drive з уніфікованими назвами пришвидшила пошук матеріалів.</p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col justify-center">
+                    <h3 class="text-center font-semibold text-slate-800 mb-6">Витрати часу команди на адміністрування задач (год/тиждень)</h3>
+                    <div class="chart-container">
+                        <canvas id="impactChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-500 rounded-full blur-3xl opacity-20 translate-x-1/2 -translate-y-1/2"></div>
+            <div class="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500 rounded-full blur-3xl opacity-20 -translate-x-1/2 translate-y-1/2"></div>
+            
+            <h2 class="text-2xl sm:text-3xl font-bold mb-6 relative z-10">🛠️ Висновок</h2>
+            <p class="text-slate-300 text-lg max-w-3xl mx-auto leading-relaxed relative z-10">
+                Цей проєкт доводить, що за допомогою No-code/Low-code інструментів та правильного процесного мислення можна об'єднати різні відділи компанії, <strong>не змушуючи їх ламати власні звички</strong>. Відділ замовлень залишився у своїх таблицях, контент-відділ отримав ідеальну дошку в Asana, а всю рутину між ними взяли на себе скрипти та автоматизація.
+            </p>
+        </section>
+
+    </main>
+
+    <script>
+        // Data and Logic for Before/After Toggle
+        const btnBefore = document.getElementById('btn-before');
+        const btnAfter = document.getElementById('btn-after');
+        const contentBefore = document.getElementById('content-before');
+        const contentAfter = document.getElementById('content-after');
+
+        btnBefore.addEventListener('click', () => {
+            btnBefore.className = "flex-1 py-4 px-6 text-center font-semibold text-rose-600 border-b-2 border-rose-500 bg-rose-50/30 transition-colors";
+            btnAfter.className = "flex-1 py-4 px-6 text-center font-medium text-slate-500 border-b-2 border-transparent hover:bg-slate-50 transition-colors";
+            contentBefore.classList.remove('hidden');
+            contentAfter.classList.add('hidden');
+            
+            contentBefore.classList.remove('fade-in');
+            void contentBefore.offsetWidth;
+            contentBefore.classList.add('fade-in');
+        });
+
+        btnAfter.addEventListener('click', () => {
+            btnAfter.className = "flex-1 py-4 px-6 text-center font-semibold text-indigo-600 border-b-2 border-indigo-500 bg-indigo-50/30 transition-colors";
+            btnBefore.className = "flex-1 py-4 px-6 text-center font-medium text-slate-500 border-b-2 border-transparent hover:bg-slate-50 transition-colors";
+            contentAfter.classList.remove('hidden');
+            contentBefore.classList.add('hidden');
+
+            contentAfter.classList.remove('fade-in');
+            void contentAfter.offsetWidth;
+            contentAfter.classList.add('fade-in');
+        });
+
+        // Data and Logic for Workflow Interaction
+        const workflowSteps = {
+            1: {
+                title: "Крок 1: Автоматичне створення задачі",
+                icon: "📋",
+                points: [
+                    "Замовник просто додає новий рядок у свою звичну Google Таблицю, не змінюючи своїх робочих звичок.",
+                    "Тригер (Power Automate / Apps Script) миттєво зчитує цей рядок і ініціює створення картки.",
+                    "Модель штучного інтелекту (Gemini/ChatGPT) обробляє сирий текст і допомагає структурувати вхідні дані для ідеального технічного завдання в Asana."
+                ]
+            },
+            2: {
+                title: "Крок 2: Прозора робота команди",
+                icon: "🎯",
+                points: [
+                    "Виконавець бачить чітку задачу в Asana з усіма дедлайнами та тегами. Ніяких пошуків інформації по чатах.",
+                    "Комунікація по задачі ведеться виключно в коментарях до відповідної картки в Asana.",
+                    "Усі файли (результати роботи) зберігаються на Google Drive за новою, розробленою мною стандартизованою ієрархією (уніфікований неймінг)."
+                ]
+            },
+            3: {
+                title: "Крок 3: Зворотна магія (Синхронізація)",
+                icon: "🔄",
+                points: [
+                    "Коли спеціаліст завершує роботу, він просто прикріплює посилання на результати з Google Drive в Asana.",
+                    "Спеціаліст натискає 'Complete' (Виконано) в Asana.",
+                    "Автоматизація зчитує цю дію і самостійно йде в таблицю замовника, знаходить потрібний рядок, змінює статус на 'Готово' і вставляє посилання на файли."
+                ]
+            }
+        };
+
+        function showStep(stepId, element) {
+            document.querySelectorAll('.step-card').forEach(card => {
+                card.classList.remove('active');
+                let numBadge = card.querySelector('.step-num, div:first-child');
+                numBadge.classList.remove('bg-indigo-600', 'text-white');
+                numBadge.classList.add('bg-slate-200', 'text-slate-600');
+            });
+
+            element.classList.add('active');
+            let activeBadge = element.querySelector('div:first-child');
+            activeBadge.classList.remove('bg-slate-200', 'text-slate-600');
+            activeBadge.classList.add('bg-indigo-600', 'text-white');
+
+            const detailsContainer = document.getElementById('step-details');
+            const data = workflowSteps[stepId];
+            
+            let pointsHtml = data.points.map(point => `
+                <li class="flex items-start gap-3">
+                    <span class="text-indigo-500 mt-1">▪️</span>
+                    <div>${point}</div>
+                </li>
+            `).join('');
+
+            detailsContainer.innerHTML = `
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-3xl">${data.icon}</span>
+                    <h3 class="text-xl font-bold text-slate-800">${data.title}</h3>
+                </div>
+                <ul class="space-y-4 text-slate-600 mt-6">
+                    ${pointsHtml}
+                </ul>
+            `;
+
+            detailsContainer.classList.remove('fade-in');
+            void detailsContainer.offsetWidth; 
+            detailsContainer.classList.add('fade-in');
+        }
+
+        // Logic for Chart.js
+        document.addEventListener("DOMContentLoaded", function() {
+            const ctx = document.getElementById('impactChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['До впровадження', 'Після автоматизації'],
+                    datasets: [{
+                        label: 'Години адміністрування',
+                        data: [22, 2], 
+                        backgroundColor: [
+                            'rgba(244, 63, 94, 0.8)', 
+                            'rgba(16, 185, 129, 0.8)' 
+                        ],
+                        borderColor: [
+                            'rgb(225, 29, 72)',
+                            'rgb(5, 150, 105)'
+                        ],
+                        borderWidth: 1,
+                        borderRadius: 6,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleFont: { size: 14, family: "'Inter', sans-serif" },
+                            bodyFont: { size: 14, family: "'Inter', sans-serif" },
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y + ' годин на тиждень';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(226, 232, 240, 0.6)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                font: { family: "'Inter', sans-serif", size: 12 },
+                                color: '#64748b',
+                                stepSize: 5
+                            },
+                            title: {
+                                display: true,
+                                text: 'Години',
+                                color: '#94a3b8',
+                                font: { family: "'Inter', sans-serif" }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                font: { family: "'Inter', sans-serif", size: 13, weight: '500' },
+                                color: '#475569'
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 2000,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
