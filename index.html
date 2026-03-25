@@ -42,18 +42,21 @@
             from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        /* Стилі для збільшення зображень */
+        .modal-overlay {
+            background-color: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(4px);
+            transition: opacity 0.3s ease;
+        }
     </style>
 </head>
 <body class="antialiased min-h-screen pb-20">
 
-    <!-- Chosen Palette: Warm neutral background (slate-50), crisp white cards (white), primary action accents (indigo-600, indigo-50), success/positive indicators (emerald-500), problem indicators (rose-500). -->
-    <!-- Application Structure Plan: The SPA is structured as a chronological, interactive case study. It begins with a Hero section for immediate context (TL;DR). Followed by an interactive "Before/After" toggle section to highlight the stark contrast the automation brought. Then, a "Workflow" section uses clickable HTML cards to break down the technical solution step-by-step, avoiding overwhelming the user. Finally, a "Results Dashboard" uses Chart.js to quantify the impact, providing hard data for the claims. This narrative flow (Context -> Problem -> Solution -> Impact) is the most effective structure for a portfolio presentation. -->
-    <!-- Visualization & Content Choices: 
-         1. TL;DR & Meta -> Goal: Quick context -> Presentation: Clean Grid/Cards -> Interaction: None (static info). 
-         2. Problem vs Solution -> Goal: Emphasize transformation -> Presentation: Interactive Tab Toggle -> Interaction: Click to switch states -> Justification: Keeps UI clean while showing direct contrast. 
-         3. Workflow Details -> Goal: Explain technical process -> Presentation: Interactive HTML/CSS flow diagram -> Interaction: Click node to reveal details -> Justification: NO SVG/Mermaid used; native HTML allows for a custom, responsive, accessible diagram. 
-         4. Business Impact -> Goal: Prove value -> Presentation: Chart.js Bar Chart & Stat Cards -> Interaction: Hover tooltips -> Justification: Visualizes the "15-20 hours saved" metric effectively. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <!-- Modal for Image Zoom -->
+    <div id="imageModal" class="fixed inset-0 z-[100] hidden modal-overlay flex items-center justify-center p-4 md:p-12" onclick="closeModal()">
+        <button class="absolute top-6 right-6 text-white text-4xl hover:text-indigo-400 transition-colors" onclick="closeModal()">&times;</button>
+        <img id="modalImage" src="" alt="Збільшене зображення" class="max-w-full max-h-full rounded-lg shadow-2xl scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+    </div>
 
     <header class="bg-white border-b border-slate-200 pt-16 pb-12 px-4 sm:px-6 lg:px-8 shadow-sm">
         <div class="max-w-5xl mx-auto">
@@ -160,9 +163,9 @@
                         <div class="mt-8 pt-6 border-t border-slate-100">
                             <h4 class="font-semibold text-slate-800 mb-4 flex items-center gap-2"><span>📸</span> Як виглядає нова екосистема:</h4>
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                <img src="Screenshot 2026-03-25 at 12.13.25.jpg" alt="Дошка Asana 1" class="rounded-xl border border-slate-200 shadow-sm w-full object-cover aspect-video hover:scale-105 transition-transform cursor-pointer">
-                                <img src="Screenshot 2026-03-25 at 12.15.00.jpg" alt="Дошка Asana 2" class="rounded-xl border border-slate-200 shadow-sm w-full object-cover aspect-video hover:scale-105 transition-transform cursor-pointer">
-                                <img src="Screenshot 2026-03-25 at 12.16.05.jpg" alt="Дошка Asana 3" class="rounded-xl border border-slate-200 shadow-sm w-full object-cover aspect-video hover:scale-105 transition-transform cursor-pointer">
+                                <img src="Screenshot 2026-03-25 at 12.13.25.jpg" alt="Дошка Asana 1" class="rounded-xl border border-slate-200 shadow-sm w-full object-cover aspect-video hover:scale-105 transition-transform cursor-zoom-in" onclick="openModal(this.src)">
+                                <img src="Screenshot 2026-03-25 at 12.15.00.jpg" alt="Дошка Asana 2" class="rounded-xl border border-slate-200 shadow-sm w-full object-cover aspect-video hover:scale-105 transition-transform cursor-zoom-in" onclick="openModal(this.src)">
+                                <img src="Screenshot 2026-03-25 at 12.16.05.jpg" alt="Дошка Asana 3" class="rounded-xl border border-slate-200 shadow-sm w-full object-cover aspect-video hover:scale-105 transition-transform cursor-zoom-in" onclick="openModal(this.src)">
                             </div>
                         </div>
                     </div>
@@ -218,7 +221,7 @@
                                 <div>Усі необхідні перетворення даних відбуваються безпосередньо в скрипті (написаному за допомогою Gemini). Скрипт автоматично структурує вхідні дані у чітке технічне завдання.</div>
                             </li>
                         </ul>
-                        <img src="Screenshot 2026-03-25 at 12.34.06.jpg" alt="Google Apps Script Code" class="rounded-lg border border-slate-200 shadow-sm w-full object-cover">
+                        <img src="Screenshot 2026-03-25 at 12.34.06.jpg" alt="Google Apps Script Code" class="rounded-lg border border-slate-200 shadow-sm w-full object-cover cursor-zoom-in" onclick="openModal(this.src)">
                     </div>
                 </div>
             </div>
@@ -281,11 +284,11 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
                         <p class="text-sm font-medium text-slate-600 mb-2">Стандартизована структура на Google Диску:</p>
-                        <img src="Screenshot 2026-03-25 at 12.46.54.png" alt="Google Drive Structure" class="rounded-xl border border-slate-200 shadow-sm w-full object-cover hover:scale-[1.01] transition-transform">
+                        <img src="Screenshot 2026-03-25 at 12.46.54.png" alt="Google Drive Structure" class="rounded-xl border border-slate-200 shadow-sm w-full object-cover hover:scale-[1.01] transition-transform cursor-zoom-in" onclick="openModal(this.src)">
                     </div>
                     <div>
                         <p class="text-sm font-medium text-slate-600 mb-2">Результат автоматизації в Google Таблиці:</p>
-                        <img src="Screenshot 2026-03-25 at 12.38.27.jpg" alt="Google Sheets Automation Result" class="rounded-xl border border-slate-200 shadow-sm w-full object-cover hover:scale-[1.01] transition-transform">
+                        <img src="Screenshot 2026-03-25 at 12.38.27.jpg" alt="Google Sheets Automation Result" class="rounded-xl border border-slate-200 shadow-sm w-full object-cover hover:scale-[1.01] transition-transform cursor-zoom-in" onclick="openModal(this.src)">
                     </div>
                 </div>
             </div>
@@ -305,6 +308,35 @@
     </main>
 
     <script>
+        // Функції для модального вікна збільшення зображень
+        function openModal(src) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modalImg.src = src;
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modalImg.classList.remove('scale-95');
+                modalImg.classList.add('scale-100');
+            }, 10);
+            document.body.style.overflow = 'hidden'; // Заборонити прокрутку фону
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modalImg.classList.add('scale-95');
+            modalImg.classList.remove('scale-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+            document.body.style.overflow = 'auto'; // Повернути прокрутку
+        }
+
+        // Закриття по Esc
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
         // Data and Logic for Before/After Toggle
         const btnBefore = document.getElementById('btn-before');
         const btnAfter = document.getElementById('btn-after');
@@ -393,7 +425,7 @@
             let imagesHtml = '';
             if (data.images && data.images.length > 0) {
                 let imgTags = data.images.map(img => `
-                    <img src="${img}" alt="Ілюстрація до кроку" class="rounded-lg border border-slate-200 shadow-sm w-full object-cover aspect-auto hover:scale-[1.02] transition-transform">
+                    <img src="${img}" alt="Ілюстрація до кроку" class="rounded-lg border border-slate-200 shadow-sm w-full object-cover aspect-auto hover:scale-[1.02] transition-transform cursor-zoom-in" onclick="openModal(this.src)">
                 `).join('');
                 imagesHtml = `<div class="mt-6 flex flex-col gap-4">${imgTags}</div>`;
             }
